@@ -24,8 +24,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'cle-pour-le-developpement-seulement')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'TON-USERNAME.pythonanywhere.com']
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'geremi.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [
