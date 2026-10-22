@@ -1,0 +1,39 @@
+{% extends 'articles/base.html' %}
+
+{% block titre %}{{ article.titre }} · Mon blog{% endblock %}
+
+{% block contenu %}
+    <a href="{% url 'articles:liste' %}" class="retour">← Retour aux articles</a>
+
+    <article class="article">
+        {% if article.categorie %}
+            <span class="etiquette">{{ article.categorie.nom }}</span>
+        {% endif %}
+        <h1>{{ article.titre }}</h1>
+        <p class="meta">
+            Par {{ article.auteur.username }} · {{ article.date_creation|date:"d F Y" }}
+        </p>
+        <div class="contenu">{{ article.contenu|linebreaks }}</div>
+    </article>
+
+    <section class="commentaires" id="commentaires">
+        <h2>{{ commentaires|length }} commentaire{{ commentaires|length|pluralize }}</h2>
+
+        {% for commentaire in commentaires %}
+            <div class="commentaire">
+                <strong>{{ commentaire.nom }}</strong>
+                <span class="meta">{{ commentaire.date_creation|date:"d/m/Y à H:i" }}</span>
+                <p>{{ commentaire.contenu|linebreaksbr }}</p>
+            </div>
+        {% empty %}
+            <p class="vide-petit">Soyez le premier à commenter.</p>
+        {% endfor %}
+
+        <h3>Laisser un commentaire</h3>
+        <form method="post" class="formulaire">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="bouton">Publier</button>
+        </form>
+    </section>
+{% endblock %}

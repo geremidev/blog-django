@@ -1,0 +1,62 @@
+{% extends 'articles/base.html' %}
+
+{% block titre %}Accueil · Mon blog{% endblock %}
+
+{% block contenu %}
+    <h2 class="titre-section">
+        {% if categorie_active %}
+            Catégorie : {{ categorie_active.nom }}
+        {% else %}
+            Derniers articles
+        {% endif %}
+    </h2>
+<form method="get" action="{% url 'articles:liste' %}" class="recherche">
+    <input type="text" name="q" value="{{ recherche }}" placeholder="Rechercher un article...">
+    <button type="submit" class="bouton">Rechercher</button>
+</form>
+
+{% if recherche %}
+    <p class="resultat-recherche">
+        Résultats pour « {{ recherche }} » : {{ page.paginator.count }} article{{ page.paginator.count|pluralize }}
+    </p>
+{% endif %}
+    <nav class="filtres">
+        <a href="{% url 'articles:liste' %}"
+           class="filtre {% if not categorie_active %}actif{% endif %}">Tous</a>
+        {% for cat in categories %}
+            <a href="{% url 'articles:categorie' cat.slug %}"
+               class="filtre {% if categorie_active == cat %}actif{% endif %}">{{ cat.nom }}</a>
+        {% endfor %}
+    </nav>
+
+    <div class="grille">
+      {% for article in page %}
+            <a href="{% url 'articles:detail' article.slug %}" class="carte">
+                {% if article.categorie %}
+                    <span class="etiquette">{{ article.categorie.nom }}</span>
+                {% endif %}
+                <h2>{{ article.titre }}</h2>
+                <p>{{ article.resume }}</p>
+                <div class="meta">
+                    Par {{ article.auteur.username }} · {{ article.date_creation|date:"d/m/Y" }}
+                </div>
+                <span class="lire-plus">Lire la suite →</span>
+            </a>
+        {% empty %}
+            <p class="vide">Aucun article dans cette catégorie.</p>
+        {% endfor %}
+    </div>
+    {% if page.has_other_pages %}
+    <nav class="pagination">
+        {% if page.has_previous %}
+            <a href="?{% if recherche %}q={{ recherche }}&{% endif %}page={{ page.previous_page_number }}">← Précédent</a>
+        {% endif %}
+
+        <span>Page {{ page.number }} sur {{ page.paginator.num_pages }}</span>
+
+        {% if page.has_next %}
+            <a href="?{% if recherche %}q={{ recherche }}&{% endif %}page={{ page.next_page_number }}">Suivant →</a>
+        {% endif %}
+    </nav>
+{% endif %}
+{% endblock %}
