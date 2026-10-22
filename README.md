@@ -21,3 +21,5 @@ Un blog personnel développé avec Django, avec un design moderne et responsive.
 ## Installation
 
 1. Cloner le dépôt
+
+git clone https://github.com/geremidev/blog-django.git
